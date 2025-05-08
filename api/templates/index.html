@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mental Health Checker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            color: #333;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 60px auto;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            text-align: center;
+            color: #305f72;
+            margin-bottom: 10px;
+        }
+
+        .intro {
+            text-align: center;
+            font-size: 1.1em;
+            color: #5e7c88;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 500;
+            color: #444;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-top: 6px;
+        }
+
+        button {
+            width: 100%;
+            background-color: #4c9a86;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            margin-top: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #3b7b6b;
+        }
+
+        #result {
+            margin-top: 25px;
+            padding: 15px;
+            background: #e3f7ec;
+            border-left: 5px solid #4c9a86;
+            font-weight: bold;
+            border-radius: 10px;
+            display: none;
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Mental Health Checker</h1>
+    <div class="intro">You're not alone. This tool is here to help you better understand your recent activity and mental well-being.</div>
+    
+    <form id="predictForm">
+        <label for="id">User ID</label>
+        <input type="number" id="id" name="id" required>
+
+        <label for="avg_retweets">Average Retweets</label>
+        <input type="text" id="avg_retweets" name="avg_retweets" required>
+
+        <label for="avg_favorites">Average Favorites</label>
+        <input type="text" id="avg_favorites" name="avg_favorites" required>
+
+        <label for="tweet_count">Tweet Count</label>
+        <input type="text" id="tweet_count" name="tweet_count" required>
+
+        <label for="mean_time_gap">Mean Time Gap Between Tweets</label>
+        <input type="text" id="mean_time_gap" name="mean_time_gap" required>
+
+        <label for="tweet_rate">Tweet Rate</label>
+        <input type="text" id="tweet_rate" name="tweet_rate" required>
+
+        <label for="unique_interactions">Unique Interactions</label>
+        <input type="text" id="unique_interactions" name="unique_interactions" required>
+
+        <label for="interactions_with_depressed">Interactions with Depressed Users</label>
+        <input type="text" id="interactions_with_depressed" name="interactions_with_depressed" required>
+
+        <label for="total_interactions">Total Interactions</label>
+        <input type="text" id="total_interactions" name="total_interactions" required>
+
+        <label for="unique_sources">Unique Tweet Sources</label>
+        <input type="text" id="unique_sources" name="unique_sources" required>
+
+        <label for="quote_ratio">Quote Tweet Ratio</label>
+        <input type="text" id="quote_ratio" name="quote_ratio" required>
+
+        <label for="followers_count">Followers Count</label>
+        <input type="text" id="followers_count" name="followers_count" required>
+
+        <label for="favourites_count">Favourites Count</label>
+        <input type="text" id="favourites_count" name="favourites_count" required>
+
+        <label for="statuses_count">Statuses Count</label>
+        <input type="text" id="statuses_count" name="statuses_count" required>
+
+        <label for="has_extended_profile">Has Extended Profile (0/1)</label>
+        <input type="text" id="has_extended_profile" name="has_extended_profile" required>
+
+        <label for="profile_background_color_brightness">Profile Background Brightness</label>
+        <input type="text" id="profile_background_color_brightness" name="profile_background_color_brightness" required>
+
+        <label for="account_age">Account Age</label>
+        <input type="text" id="account_age" name="account_age" required>
+
+        <button type="button" onclick="predict()">Check My Mental Health</button>
+    </form>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    function predict() {
+        const form = document.getElementById('predictForm');
+        const formData = new FormData(form);
+
+        fetch('/predict', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            const resultDiv = document.getElementById('result');
+            if (data.error) {
+                resultDiv.textContent = `Error: ${data.error}`;
+                resultDiv.style.background = "#fdd";
+                resultDiv.style.borderLeft = "5px solid #e00";
+            } else {
+                const prediction = data.prediction;
+                const isDepressed = data.is_depressed ? "Likely Depressed" : "Not Depressed";
+                resultDiv.textContent = `Prediction Score: ${prediction} — Status: ${isDepressed}`;
+                resultDiv.style.background = "#e3f7ec";
+                resultDiv.style.borderLeft = "5px solid #4c9a86";
+            }
+            resultDiv.style.display = 'block';
+        })
+        .catch(error => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = `Error: ${error}`;
+            resultDiv.style.background = "#fdd";
+            resultDiv.style.borderLeft = "5px solid #e00";
+            resultDiv.style.display = 'block';
+        });
+    }
+</script>
+
+</body>
+</html>

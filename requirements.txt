@@ -1,0 +1,10 @@
+pandas==2.2.2
+numpy==1.26.4
+scikit-learn
+flask
+joblib
+mlflow
+seaborn
+setuptools
+flask-httpauth
+Flask-BasicAuth

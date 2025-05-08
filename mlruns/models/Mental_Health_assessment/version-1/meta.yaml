@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1746642034515
+current_stage: None
+description: ''
+last_updated_timestamp: 1746642034515
+name: Mental_Health_assessment
+run_id: 3659369e0aa0461fbb4dba5c7d4222f4
+run_link: ''
+source: file:///C:/Users/Khouloud/Desktop/MentalHealth/MentalHealth/mlruns/878508508097481012/3659369e0aa0461fbb4dba5c7d4222f4/artifacts/model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/Khouloud/Desktop/MentalHealth/MentalHealth/mlruns/878508508097481012/3659369e0aa0461fbb4dba5c7d4222f4/artifacts/model
+user_id: null
+version: 1
