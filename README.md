@@ -1,12 +1,13 @@
 # 🧠 Mental Health Assessment: CI/CD Deployment Pipeline
 
-This project automates the deployment of a mental health assessment model using a complete **MLOps pipeline**. It integrates **Flask**, **Docker**, **MLflow**, **Jenkins**, and **GitHub Actions** to streamline model deployment, version control, and operationalization of machine learning workflows.
+This project delivers an end-to-end MLOps pipeline that operationalizes a machine learning model designed to assess the likelihood of depression based on social media activity.
 
-The deployed model is a **Gradient Boosting Classifier** that predicts potential signs of depression based on user behavior and Twitter profile features.
+The entire deployment process is containerized with Docker, tracked through MLflow, and orchestrated using CI/CD pipelines via Jenkins and GitHub Actions. This enables robust versioning, reproducibility, and automation; key components in deploying machine learning solutions at scale.
 
-> 📌 **Note**: Detailed data extraction, preprocessing, model development, and experimentation are handled in a separate repository:
+The deployed model is a Gradient Boosting Classifier, selected through comparative experimentation against other algorithms for its superior performance.
+
+> 📌 **Note**: All data collection, preprocessing, feature engineering, and model experimentation are conducted in a separate repository: <br>
 > 👉 [Mental Health Assessment - Modeling & Training](https://github.com/Kh0uloud/Modeling-Mental-Health-Trends-Using-Social-Media-Data)
-
 ---
 
 ### 📆 Installation & Setup
