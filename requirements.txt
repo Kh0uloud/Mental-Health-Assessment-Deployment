@@ -1,10 +1,13 @@
 pandas==2.2.2
 numpy==1.26.4
 scikit-learn
-flask
+Flask
 joblib
 mlflow
 seaborn
 setuptools
 flask-httpauth
 Flask-BasicAuth
+cloudpickle
+psutil
+scipy
