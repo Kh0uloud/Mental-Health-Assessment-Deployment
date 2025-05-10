@@ -7,17 +7,12 @@ pipeline {
         REGISTRY = 'registry.example.com:6000'
     }
     stages {
-        stage('Clone Repository') {
-            steps {
-                git 'https://github.com/Kh0uloud/Mental-Health-Assessment-Deployment.git'
-            }
-        }
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t $IMAGE_NAME .'
             }
         }
-        stage('Tage Image') {
+        stage('Tag Image') {
             steps {
                 sh 'docker tag $IMAGE_NAME $REGISTRY/$IMAGE_NAME:latest'
             }
