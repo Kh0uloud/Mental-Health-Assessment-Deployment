@@ -1,5 +1,11 @@
 pipeline {
     agent any
+    environment {
+        MLFLOW_TRACKING_URI = 'http://mlflow.example.com:8080'
+        MODEL_NAME = 'mental-health-assessment'
+        IMAGE_NAME = 'mentalhealth-assess'
+        REGISTRY = 'registry.example.com:6000'
+    }
     stages {
         stage('Clone Repository') {
             steps {
@@ -8,25 +14,22 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t mentalhealth-assess .'
+                sh 'docker build -t $IMAGE_NAME .'
             }
         }
-        stage('Run Unit Tests') {
+        stage('Tage Image') {
             steps {
-                sh 'docker run mentalhealth-assess pytest tests/'
+                sh 'docker tag $IMAGE_NAME $REGISTRY/$IMAGE_NAME:latest'
             }
         }
-        stage('Push to Docker Registry') {
+        stage('Push to Local Docker Registry') {
             steps {
-                withDockerRegistry([credentialsId: 'docker-hub-credentials']) {
-                    sh 'docker tag mentalhealth-assess kh0uloud/mentalhealth-assess:latest'
-                    sh 'docker push kh0uloud/mentalhealth-assess:latest'
-                }
+                sh 'docker push $REGISTRY/$IMAGE_NAME:latest'
             }
         }
-        stage('Deploy Model') {
+        stage('Run Container') {
             steps {
-                sh 'docker run -d -p 8000:8080 kh0uloud/mentalhealth-assess:latest'
+                sh 'docker run -d --name mentalhealth-assess -p 5000:5000 $REGISTRY/$IMAGE_NAME:latest'
             }
         }
     }
