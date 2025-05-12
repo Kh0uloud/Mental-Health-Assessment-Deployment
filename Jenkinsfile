@@ -4,7 +4,7 @@ pipeline {
         MLFLOW_TRACKING_URI = 'http://mlflow.example.com:8080'
         MODEL_NAME = 'mental-health-assessment'
         IMAGE_NAME = 'mentalhealth-assess'
-        REGISTRY = 'registry.example.com:6000'
+        REGISTRY = 'host.docker.internal:6000'
     }
     stages {
         stage('Build Docker Image') {
