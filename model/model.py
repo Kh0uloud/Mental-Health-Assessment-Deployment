@@ -13,6 +13,17 @@ from mlflow.sklearn import log_model
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--mlflow_tracking_uri', type=str, default='http://localhost:5000')  # Default MLflow URI
+parser.add_argument('--model_name', type=str, default='Mental_Health_assessment')        # Default experiment name
+args = parser.parse_args()
+
+mlflow.set_tracking_uri(args.mlflow_tracking_uri)
+mlflow.set_experiment(args.model_name)
+
+
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -101,7 +112,9 @@ def save_model(model, model_save_path):
         logging.error(f"Error saving model: {e}")
 
 if __name__ == '__main__':
-    mlflow.set_experiment("Mental_Health_assessment")
+    mlflow.set_tracking_uri(args.mlflow_tracking_uri)
+    mlflow.set_experiment(args.model_name)
+
 
     data_path = os.getenv('DATA_PATH', 'data/structured_data.csv')
     model_save_path = os.getenv('MODEL_SAVE_PATH', 'model/saved_models/model.pkl')
