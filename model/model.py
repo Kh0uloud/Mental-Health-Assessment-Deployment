@@ -72,31 +72,10 @@ def evaluate_model(model, X_test, y_test):
     metrics['accuracy'] = accuracy_score(y_test, y_pred)
     metrics['roc_auc'] = roc_auc_score(y_test, y_pred_proba)
     metrics['classification_report'] = classification_report(y_test, y_pred)
-
-    # Plot and save confusion matrix
-    cm = confusion_matrix(y_test, y_pred)
-    plt.figure(figsize=(10, 7))
-    sns.heatmap(cm, annot=True, fmt='g')
-    plt.title('Confusion Matrix')
-    plt.ylabel('Actual label')
-    plt.xlabel('Predicted label')
-    confusion_matrix_path = "assets/confusion_matrix.png"
-    plt.savefig(confusion_matrix_path)
-    mlflow.log_artifact(confusion_matrix_path)
-
-    # Plot and save precision-recall curve
+    
+    # precision-recall
     precision, recall, _ = precision_recall_curve(y_test, y_pred_proba)
     auprc = auc(recall, precision)
-    plt.figure()
-    plt.plot(recall, precision, label=f'AUPRC = {auprc:.2f}')
-    plt.xlabel('Recall')
-    plt.ylabel('Precision')
-    plt.title('Precision-Recall curve')
-    plt.legend(loc='best')
-    precision_recall_curve_path = "assets/precision_recall_curve.png"
-    plt.savefig(precision_recall_curve_path)
-    mlflow.log_artifact(precision_recall_curve_path)
-
     metrics['auprc'] = auprc
 
     return metrics
