@@ -8,7 +8,6 @@ on:
 env:
   IMAGE_NAME: mentalhealth-assess
   REGISTRY: ghcr.io/Kh0uloud
-  MLFLOW_TRACKING_URI: http://mlflow.example.com:8080
   MODEL_NAME: Mental_Health_assessment
 
 jobs:
@@ -34,7 +33,7 @@ jobs:
           DATA_PATH: ${{ github.workspace }}/data/structured_data.csv
           MODEL_SAVE_PATH: ${{ github.workspace }}/model/saved_models/model.pkl
         run: |
-          python model/model.py --mlflow_tracking_uri $MLFLOW_TRACKING_URI --model_name $MODEL_NAME
+          python model/model.py --model_name $MODEL_NAME
 
       - name: 🔐 Log in to GitHub Container Registry
         uses: docker/login-action@v3
