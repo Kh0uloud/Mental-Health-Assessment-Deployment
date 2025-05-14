@@ -1,4 +1,4 @@
-# 🧠 Mental Health Assessment: CI/CD Deployment Pipeline
+# 🔁 Mental Health Assessment: CI/CD Deployment Pipeline
 
 This project delivers an end-to-end MLOps pipeline that operationalizes a machine learning model designed to assess the likelihood of depression based on social media activity.
 
