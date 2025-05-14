@@ -92,6 +92,7 @@ def save_model(model, model_save_path):
 
 if __name__ == '__main__':
     # mlflow.set_tracking_uri(args.mlflow_tracking_uri)
+    mlflow.set_tracking_uri("file://" + os.path.abspath("mlruns"))
     mlflow.set_experiment(args.model_name)
 
 
