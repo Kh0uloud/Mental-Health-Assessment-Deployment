@@ -40,7 +40,7 @@ jobs:
           python model/model.py --model_name $MODEL_NAME
 
       - name: Upload model artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: model-artifacts
           path: |
