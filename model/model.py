@@ -15,6 +15,13 @@ import matplotlib.pyplot as plt
 
 import argparse
 
+import tempfile
+
+# Force MLflow to use a safe local folder inside the current workspace
+local_artifact_dir = os.path.abspath("mlruns_artifacts")
+os.makedirs(local_artifact_dir, exist_ok=True)
+
+
 parser = argparse.ArgumentParser()
 #parser.add_argument('--mlflow_tracking_uri', type=str, default='http://localhost:5000')  # Default MLflow URI
 parser.add_argument('--model_name', type=str, default='Mental_Health_assessment')        # Default experiment name
@@ -96,14 +103,17 @@ if __name__ == '__main__':
     mlflow.set_experiment(args.model_name)
 
 
-    data_path = os.getenv('DATA_PATH', 'data/structured_data.csv')
-    model_save_path = os.getenv('MODEL_SAVE_PATH', 'model/saved_models/model.pkl')
+    data_path = os.path.abspath(os.getenv('DATA_PATH', 'data/structured_data.csv'))
+    model_save_path = os.path.abspath(os.getenv('MODEL_SAVE_PATH', 'model/saved_models/model.pkl'))
 
     # Load the dataset
     data = load_data(data_path)
     X, y = preprocess_data(data)
 
     with mlflow.start_run():
+        mlflow.set_tag("mlflow.source.git.repoURL", "https://github.com/${{ github.repository }}")
+        mlflow.set_tag("mlflow.source.name", __file__)
+
         # Train the model
         model, X_test, y_test = train_model(X, y)
 

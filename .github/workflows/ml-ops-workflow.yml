@@ -28,12 +28,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r model/requirements.txt
 
+      - name: Create mlruns directory in runner
+        run: mkdir -p mlruns
+
       - name: 🤖 Train and Register Model with MLflow
         env:
           DATA_PATH: ${{ github.workspace }}/data/structured_data.csv
           MODEL_SAVE_PATH: ${{ github.workspace }}/model/saved_models/model.pkl
         run: |
+          mkdir -p mlruns  # <-- this ensures tracking directory exists
           python model/model.py --model_name $MODEL_NAME
+
+      - name: Upload model artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: model-artifacts
+          path: |
+            model/saved_models/model.pkl
+            mlruns/
 
       - name: 🔐 Log in to GitHub Container Registry
         uses: docker/login-action@v3
