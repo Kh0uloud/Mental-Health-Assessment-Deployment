@@ -136,7 +136,7 @@ if __name__ == '__main__':
             logging.error(f"Error checking model logging path: {e}")
 
         # Log model
-        log_model(model, artifact_path="model")
+        #log_model(model, artifact_path="model")
 
         # Save the model locally
         save_model(model, model_save_path)
