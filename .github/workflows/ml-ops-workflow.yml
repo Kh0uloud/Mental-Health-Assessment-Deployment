@@ -35,6 +35,7 @@ jobs:
         env:
           DATA_PATH: ${{ github.workspace }}/data/structured_data.csv
           MODEL_SAVE_PATH: ${{ github.workspace }}/model/saved_models/model.pkl
+          GITHUB_REPO_URL: https://github.com/${{ github.repository }}
         run: |
           mkdir -p mlruns  # <-- this ensures tracking directory exists
           python model/model.py --model_name $MODEL_NAME

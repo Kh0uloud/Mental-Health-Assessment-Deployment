@@ -15,21 +15,15 @@ import matplotlib.pyplot as plt
 
 import argparse
 
-import tempfile
-
-# Force MLflow to use a safe local folder inside the current workspace
-local_artifact_dir = os.path.abspath("mlruns_artifacts")
-os.makedirs(local_artifact_dir, exist_ok=True)
-
 
 parser = argparse.ArgumentParser()
+#For working Locally
 #parser.add_argument('--mlflow_tracking_uri', type=str, default='http://localhost:5000')  # Default MLflow URI
+#mlflow.set_tracking_uri(args.mlflow_tracking_uri)
 parser.add_argument('--model_name', type=str, default='Mental_Health_assessment')        # Default experiment name
 args = parser.parse_args()
 
-#mlflow.set_tracking_uri(args.mlflow_tracking_uri)
 mlflow.set_experiment(args.model_name)
-
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -98,20 +92,21 @@ def save_model(model, model_save_path):
         logging.error(f"Error saving model: {e}")
 
 if __name__ == '__main__':
-    # mlflow.set_tracking_uri(args.mlflow_tracking_uri)
-    mlflow.set_tracking_uri("file://" + os.path.abspath("mlruns"))
+    mlflow_tracking_dir = os.path.join(os.getcwd(), "mlruns")
+    mlflow.set_tracking_uri(f"file://{mlflow_tracking_dir}")
+    logging.info(f"the mlflow tracking_uri is : file://{mlflow_tracking_dir}")
+
     mlflow.set_experiment(args.model_name)
 
-
-    data_path = os.path.abspath(os.getenv('DATA_PATH', 'data/structured_data.csv'))
-    model_save_path = os.path.abspath(os.getenv('MODEL_SAVE_PATH', 'model/saved_models/model.pkl'))
+    data_path = os.getenv('DATA_PATH', 'data/structured_data.csv')
+    model_save_path = os.getenv('MODEL_SAVE_PATH', 'model/saved_models/model.pkl')
 
     # Load the dataset
     data = load_data(data_path)
     X, y = preprocess_data(data)
 
     with mlflow.start_run():
-        mlflow.set_tag("mlflow.source.git.repoURL", "https://github.com/${{ github.repository }}")
+        mlflow.set_tag("mlflow.source.git.repoURL", os.getenv("GITHUB_REPO_URL"))
         mlflow.set_tag("mlflow.source.name", __file__)
 
         # Train the model
@@ -129,11 +124,19 @@ if __name__ == '__main__':
         mlflow.log_metric("roc_auc", metrics['roc_auc'])
         mlflow.log_metric("auprc", metrics['auprc'])
 
+        logging.info(f"Model training completed with accuracy: {metrics['accuracy']}, ROC AUC: {metrics['roc_auc']}, AUPRC: {metrics['auprc']}")
+        logging.info(metrics['classification_report'])
+
+        try:
+            model_artifact_dir = os.path.join(mlflow_tracking_dir, mlflow.active_run().info.run_id, "artifacts", "model")
+            logging.info(f"Model will be logged at: {model_artifact_dir}")
+            if not os.access(mlflow_tracking_dir, os.W_OK):
+                logging.warning(f"MLflow tracking directory is NOT writable: {mlflow_tracking_dir}")
+        except Exception as e:
+            logging.error(f"Error checking model logging path: {e}")
+
         # Log model
-        log_model(model, "model")
+        log_model(model, artifact_path="model")
 
         # Save the model locally
         save_model(model, model_save_path)
-
-        logging.info(f"Model training completed with accuracy: {metrics['accuracy']}, ROC AUC: {metrics['roc_auc']}, AUPRC: {metrics['auprc']}")
-        logging.info(metrics['classification_report'])
