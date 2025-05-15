@@ -7,7 +7,7 @@ on:
 
 env:
   IMAGE_NAME: mentalhealth-assess
-  REGISTRY: ghcr.io/Kh0uloud
+  REGISTRY: ghcr.io/kh0uloud
   MODEL_NAME: Mental_Health_assessment
 
 jobs:
